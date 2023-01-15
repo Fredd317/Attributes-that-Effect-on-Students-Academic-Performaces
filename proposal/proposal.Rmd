@@ -1,0 +1,112 @@
+---
+title: "Project proposal"
+author: "Ardavan Shahrabi Farahani, Armaan Gill, Frederick Go"
+date: "2022-10-28"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+# skimr is required for skim function on proposal. 
+# devtools::install_github("skimr")
+# install.packages("skimr")
+```
+
+## Questions to be investigated
+
+1. Which variable corresponds with the least and the greatest impact on a students’ academic performance? 
+2. Does the relationship status of a students’ family have an impact on their grades? If so, how do they relate?
+3. What is the correlation between alcohol consumption and variables that impact academic performance such as hours studying, number of absences, number of class failures?
+
+## Data to be used
+
+Data set chosen is studies of students' academic performance. 
+
+The **data set** describes performance of students in **Mathematics class** and **Portuguese class** with a variety of **attributes** of students from two Portuguese schools. These attributes include their gender, status of parents, alcohol consumption, their activities etc. 
+
+```{r echo=FALSE}
+data_description_table <- rbind(c("school",     "categorical",  "Students’ school: [GP, MS]"),
+                          c("sex",        "categorical",  "Students’ sex: [F, M]"),
+                          c("age",        "quantitative", "Students’ age: [15-22]"),
+                          c("address",    "categorical",  "Students’ home address type: [U, R]"),
+                          c("famsize",    "categorical",  "Students’ family size: [LE3, GT3]"),
+                          c("Pstatus",    "categorical",  "Parents’ cohabitation status: [T, A]"),
+                          c("Medu",       "categorical",  "Mother’s education: [0:4]"),
+                          c("Fedu",       "categorical",  "Father’s education: [0:4]"),
+                          c("Mjob",       "categorical",  "Mother’s job"),
+                          c("Fjob",       "categorical",  "Father’s job"),
+                          c("reason",     "categorical",  "Why students chose the school"),
+                          c("guardian",   "categorical",  "Students’ guardian"),
+                          c("traveltime", "categorical",  "Travel time from home to school: [0:4]"),
+                          c("studytime",  "categorical",  "Weekly study time: [0:4]"),
+                          c("failures",   "categorical",  "Number of past class failures: [0:4]"),
+                          c("schoolsup",  "categorical",  "Extra educational support: [yes, no]"),
+                          c("famsup",     "categorical",  "Family educational support: [yes, no]"),
+                          c("paid",       "categorical",  "Extra paid classes: [yes, no]"),
+                          c("activities", "categorical",  "Extracurricular activities: [yes, no]"),
+                          c("nursery",    "categorical",  "Attended nursery school: [yes, no]"),
+                          c("higher",     "categorical",  "Interested in higher education: [yes, no]"),
+                          c("internet",   "categorical",  "Availability of internet at home: [yes, no]"),
+                          c("romantic",   "categorical",  "In a romantic relationship: [yes, no]"),
+                          c("famrel",     "categorical",  "Family relationship quality: [0:5]"),
+                          c("freetime",   "categorical",  "Free time after school: [0:5]"),
+                          c("goout",      "categorical",  "Goes out with friends: [0:5]"),
+                          c("Dalc",       "categorical",  "Alcohol consumption on workdays: [0:5]"),
+                          c("Walc",       "categorical",  "Alcohol consumption on weekends: [0:5]"),
+                          c("health",     "categorical",  "Student’s health: [0:5]"),
+                          c("absences",   "quantitative", "Number of school absences: 0~93"),
+                          c("G1",         "quantitative", "First period grade: 0~20"),
+                          c("G2",         "quantitative", "Second period grade: 0~20"),
+                          c("G3",         "quantitative", "Final grade: 0~20"))
+
+colnames(data_description_table) <- c("Variable Name", "Type", "Description")
+rownames(data_description_table) <- c(1:33)
+```
+
+```{r}
+data_description_table
+```
+
+There are **33** attributes including any target variables. Studies on **Mathematics class** was done with **395** instances and studies on **Portuguese class** was done with **649** students. Note that no column has any missing data. The data was collected with surveys. 
+
+```{r}
+maths_study = read.csv(here("data", "Maths.csv"))
+portuguese_study = read.csv(here("data", "Portuguese.csv"))
+```
+
+```{r}
+skimr::skim(maths_study)
+```
+```{r}
+skimr::skim(portuguese_study)
+```
+
+## Ideas for visualization
+
+#### Question: Which variable corresponds with the least and the greatest impact on a students’ academic performance. 
+
+Planned Visualization: To answer this question we will create a scatterplot using geom_point() with the x and y value being alcohol consumption and a quantitative variable respectively. We will create a plot for each individual quantitative variable using task_facets() and we will add a regression line using lm() which will show us the correlation between variables. 
+
+#### Question: Does the relationship status of a students’ family have an impact on their academic performance? If so, how do they relate?
+
+Planned Visualization: In order to study the relationship between family related attributes of students to their academic performance, we plan on creating barplots x will be different attributes related to family where y will be academic performance related variables. We will also be using lots of functions from dplyr package and facets from glimpse package in order to see specific combinations of data since there are many variables. PCA or MDS may be used as there are over 30 variables, though this questions may require only 5-10 variables. 
+
+#### Question: What is the correlation between alcohol consumption and variables that impact academic performance such as hours studying, number of absences, number of class failures
+
+Planned Visualization: To answer this question, we plan on creating a barplot using the function barplot() with one of my x,y variables being alcohol consumption and the other being a variable related with the impact of a students grades such as hours studying. We will use the findings from this barplot to figure out what the impact of alcohol is on each one. We think a barplot would be useful in this regard because it will be easy to read and compare the effect alcohol has on many variables in one single graph. 
+
+## Team planning
+
+Each member of the group are planning on answering one question each with the help from the other two members. Then we will all work together on the report and preparing for the oral presentation. The presentation will be divide up on all three of us. 
+
+All members are planning on using the same dataset; however, all of use will be studying different variables in order to answer specific questions. 
+
+## Challenges anticipated
+
+None for now
+
+## References
+
+The dataset comes from Aman Chauhan on: https://www.kaggle.com/datasets/whenamancodes/alcohol-effects-on-study?datasetId=2479552 (keggle)
