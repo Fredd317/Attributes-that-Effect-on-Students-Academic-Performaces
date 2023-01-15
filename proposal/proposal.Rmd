@@ -2,7 +2,9 @@
 title: "Project proposal"
 author: "Ardavan Shahrabi Farahani, Armaan Gill, Frederick Go"
 date: "2022-10-28"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 ```{r setup, include=FALSE}

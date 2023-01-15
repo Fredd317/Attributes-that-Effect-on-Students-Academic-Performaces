@@ -1,0 +1,541 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Project proposal},
+  pdfauthor={Ardavan Shahrabi Farahani, Armaan Gill, Frederick Go},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Project proposal}
+\author{Ardavan Shahrabi Farahani, Armaan Gill, Frederick Go}
+\date{2022-10-28}
+
+\begin{document}
+\maketitle
+
+\hypertarget{questions-to-be-investigated}{%
+\subsection{Questions to be
+investigated}\label{questions-to-be-investigated}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Which variable corresponds with the least and the greatest impact on a
+  students' academic performance?
+\item
+  Does the relationship status of a students' family have an impact on
+  their grades? If so, how do they relate?
+\item
+  What is the correlation between alcohol consumption and variables that
+  impact academic performance such as hours studying, number of
+  absences, number of class failures?
+\end{enumerate}
+
+\hypertarget{data-to-be-used}{%
+\subsection{Data to be used}\label{data-to-be-used}}
+
+Data set chosen is studies of students' academic performance.
+
+The \textbf{data set} describes performance of students in
+\textbf{Mathematics class} and \textbf{Portuguese class} with a variety
+of \textbf{attributes} of students from two Portuguese schools. These
+attributes include their gender, status of parents, alcohol consumption,
+their activities etc.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data\_description\_table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    Variable Name Type           Description                                  
+## 1  "school"      "categorical"  "Students’ school: [GP, MS]"                 
+## 2  "sex"         "categorical"  "Students’ sex: [F, M]"                      
+## 3  "age"         "quantitative" "Students’ age: [15-22]"                     
+## 4  "address"     "categorical"  "Students’ home address type: [U, R]"        
+## 5  "famsize"     "categorical"  "Students’ family size: [LE3, GT3]"          
+## 6  "Pstatus"     "categorical"  "Parents’ cohabitation status: [T, A]"       
+## 7  "Medu"        "categorical"  "Mother’s education: [0:4]"                  
+## 8  "Fedu"        "categorical"  "Father’s education: [0:4]"                  
+## 9  "Mjob"        "categorical"  "Mother’s job"                               
+## 10 "Fjob"        "categorical"  "Father’s job"                               
+## 11 "reason"      "categorical"  "Why students chose the school"              
+## 12 "guardian"    "categorical"  "Students’ guardian"                         
+## 13 "traveltime"  "categorical"  "Travel time from home to school: [0:4]"     
+## 14 "studytime"   "categorical"  "Weekly study time: [0:4]"                   
+## 15 "failures"    "categorical"  "Number of past class failures: [0:4]"       
+## 16 "schoolsup"   "categorical"  "Extra educational support: [yes, no]"       
+## 17 "famsup"      "categorical"  "Family educational support: [yes, no]"      
+## 18 "paid"        "categorical"  "Extra paid classes: [yes, no]"              
+## 19 "activities"  "categorical"  "Extracurricular activities: [yes, no]"      
+## 20 "nursery"     "categorical"  "Attended nursery school: [yes, no]"         
+## 21 "higher"      "categorical"  "Interested in higher education: [yes, no]"  
+## 22 "internet"    "categorical"  "Availability of internet at home: [yes, no]"
+## 23 "romantic"    "categorical"  "In a romantic relationship: [yes, no]"      
+## 24 "famrel"      "categorical"  "Family relationship quality: [0:5]"         
+## 25 "freetime"    "categorical"  "Free time after school: [0:5]"              
+## 26 "goout"       "categorical"  "Goes out with friends: [0:5]"               
+## 27 "Dalc"        "categorical"  "Alcohol consumption on workdays: [0:5]"     
+## 28 "Walc"        "categorical"  "Alcohol consumption on weekends: [0:5]"     
+## 29 "health"      "categorical"  "Student’s health: [0:5]"                    
+## 30 "absences"    "quantitative" "Number of school absences: 0~93"            
+## 31 "G1"          "quantitative" "First period grade: 0~20"                   
+## 32 "G2"          "quantitative" "Second period grade: 0~20"                  
+## 33 "G3"          "quantitative" "Final grade: 0~20"
+\end{verbatim}
+
+There are \textbf{33} attributes including any target variables. Studies
+on \textbf{Mathematics class} was done with \textbf{395} instances and
+studies on \textbf{Portuguese class} was done with \textbf{649}
+students. Note that no column has any missing data. The data was
+collected with surveys.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{maths\_study }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"Maths.csv"}\NormalTok{))}
+\NormalTok{portuguese\_study }\OtherTok{=} \FunctionTok{read.csv}\NormalTok{(}\FunctionTok{here}\NormalTok{(}\StringTok{"data"}\NormalTok{, }\StringTok{"Portuguese.csv"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{skimr}\SpecialCharTok{::}\FunctionTok{skim}\NormalTok{(maths\_study)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule()
+\endhead
+Name & maths\_study \\
+Number of rows & 395 \\
+Number of columns & 33 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+character & 17 \\
+numeric & 16 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Variable type: character}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1389}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0833}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1528}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+empty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+whitespace
+\end{minipage} \\
+\midrule()
+\endhead
+school & 0 & 1 & 2 & 2 & 0 & 2 & 0 \\
+sex & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+address & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+famsize & 0 & 1 & 3 & 3 & 0 & 2 & 0 \\
+Pstatus & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+Mjob & 0 & 1 & 5 & 8 & 0 & 5 & 0 \\
+Fjob & 0 & 1 & 5 & 8 & 0 & 5 & 0 \\
+reason & 0 & 1 & 4 & 10 & 0 & 4 & 0 \\
+guardian & 0 & 1 & 5 & 6 & 0 & 3 & 0 \\
+schoolsup & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+famsup & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+paid & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+activities & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+nursery & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+higher & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+internet & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+romantic & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1867}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1333}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1867}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0800}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0667}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0400}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0800}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule()
+\endhead
+age & 0 & 1 & 16.70 & 1.28 & 15 & 16 & 17 & 18 & 22 & ▇▅▅▁▁ \\
+Medu & 0 & 1 & 2.75 & 1.09 & 0 & 2 & 3 & 4 & 4 & ▁▃▆▆▇ \\
+Fedu & 0 & 1 & 2.52 & 1.09 & 0 & 2 & 2 & 3 & 4 & ▁▆▇▇▇ \\
+traveltime & 0 & 1 & 1.45 & 0.70 & 1 & 1 & 1 & 2 & 4 & ▇▃▁▁▁ \\
+studytime & 0 & 1 & 2.04 & 0.84 & 1 & 1 & 2 & 2 & 4 & ▅▇▁▂▁ \\
+failures & 0 & 1 & 0.33 & 0.74 & 0 & 0 & 0 & 0 & 3 & ▇▁▁▁▁ \\
+famrel & 0 & 1 & 3.94 & 0.90 & 1 & 4 & 4 & 5 & 5 & ▁▁▃▇▅ \\
+freetime & 0 & 1 & 3.24 & 1.00 & 1 & 3 & 3 & 4 & 5 & ▁▃▇▆▂ \\
+goout & 0 & 1 & 3.11 & 1.11 & 1 & 2 & 3 & 4 & 5 & ▂▆▇▅▃ \\
+Dalc & 0 & 1 & 1.48 & 0.89 & 1 & 1 & 1 & 2 & 5 & ▇▂▁▁▁ \\
+Walc & 0 & 1 & 2.29 & 1.29 & 1 & 1 & 2 & 3 & 5 & ▇▅▅▃▂ \\
+health & 0 & 1 & 3.55 & 1.39 & 1 & 3 & 4 & 5 & 5 & ▂▂▅▃▇ \\
+absences & 0 & 1 & 5.71 & 8.00 & 0 & 0 & 4 & 8 & 75 & ▇▁▁▁▁ \\
+G1 & 0 & 1 & 10.91 & 3.32 & 3 & 8 & 11 & 13 & 19 & ▂▇▇▆▂ \\
+G2 & 0 & 1 & 10.71 & 3.76 & 0 & 9 & 11 & 13 & 19 & ▁▂▇▆▂ \\
+G3 & 0 & 1 & 10.42 & 4.58 & 0 & 8 & 11 & 14 & 20 & ▂▃▇▅▁ \\
+\bottomrule()
+\end{longtable}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{skimr}\SpecialCharTok{::}\FunctionTok{skim}\NormalTok{(portuguese\_study)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\caption{Data summary}\tabularnewline
+\toprule()
+\endhead
+Name & portuguese\_study \\
+Number of rows & 649 \\
+Number of columns & 33 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Column type frequency: & \\
+character & 17 \\
+numeric & 16 \\
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_ & \\
+Group variables & None \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Variable type: character}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1389}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1944}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0556}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.0833}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1250}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 14\tabcolsep) * \real{0.1528}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+min
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+max
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+empty
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_unique
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+whitespace
+\end{minipage} \\
+\midrule()
+\endhead
+school & 0 & 1 & 2 & 2 & 0 & 2 & 0 \\
+sex & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+address & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+famsize & 0 & 1 & 3 & 3 & 0 & 2 & 0 \\
+Pstatus & 0 & 1 & 1 & 1 & 0 & 2 & 0 \\
+Mjob & 0 & 1 & 5 & 8 & 0 & 5 & 0 \\
+Fjob & 0 & 1 & 5 & 8 & 0 & 5 & 0 \\
+reason & 0 & 1 & 4 & 10 & 0 & 4 & 0 \\
+guardian & 0 & 1 & 5 & 6 & 0 & 3 & 0 \\
+schoolsup & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+famsup & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+paid & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+activities & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+nursery & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+higher & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+internet & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+romantic & 0 & 1 & 2 & 3 & 0 & 2 & 0 \\
+\bottomrule()
+\end{longtable}
+
+\textbf{Variable type: numeric}
+
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1867}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1333}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.1867}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0800}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0667}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0400}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0533}}
+  >{\raggedleft\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0667}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 20\tabcolsep) * \real{0.0800}}@{}}
+\toprule()
+\begin{minipage}[b]{\linewidth}\raggedright
+skim\_variable
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+n\_missing
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+complete\_rate
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+mean
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+sd
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p0
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p25
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p50
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p75
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedleft
+p100
+\end{minipage} & \begin{minipage}[b]{\linewidth}\raggedright
+hist
+\end{minipage} \\
+\midrule()
+\endhead
+age & 0 & 1 & 16.74 & 1.22 & 15 & 16 & 17 & 18 & 22 & ▇▅▅▁▁ \\
+Medu & 0 & 1 & 2.51 & 1.13 & 0 & 2 & 2 & 4 & 4 & ▁▆▇▆▇ \\
+Fedu & 0 & 1 & 2.31 & 1.10 & 0 & 1 & 2 & 3 & 4 & ▁▆▇▅▅ \\
+traveltime & 0 & 1 & 1.57 & 0.75 & 1 & 1 & 1 & 2 & 4 & ▇▅▁▁▁ \\
+studytime & 0 & 1 & 1.93 & 0.83 & 1 & 1 & 2 & 2 & 4 & ▆▇▁▂▁ \\
+failures & 0 & 1 & 0.22 & 0.59 & 0 & 0 & 0 & 0 & 3 & ▇▁▁▁▁ \\
+famrel & 0 & 1 & 3.93 & 0.96 & 1 & 4 & 4 & 5 & 5 & ▁▁▂▇▅ \\
+freetime & 0 & 1 & 3.18 & 1.05 & 1 & 3 & 3 & 4 & 5 & ▂▃▇▆▂ \\
+goout & 0 & 1 & 3.18 & 1.18 & 1 & 2 & 3 & 4 & 5 & ▂▆▇▆▅ \\
+Dalc & 0 & 1 & 1.50 & 0.92 & 1 & 1 & 1 & 2 & 5 & ▇▂▁▁▁ \\
+Walc & 0 & 1 & 2.28 & 1.28 & 1 & 1 & 2 & 3 & 5 & ▇▅▃▃▂ \\
+health & 0 & 1 & 3.54 & 1.45 & 1 & 2 & 4 & 5 & 5 & ▃▂▃▃▇ \\
+absences & 0 & 1 & 3.66 & 4.64 & 0 & 0 & 2 & 6 & 32 & ▇▂▁▁▁ \\
+G1 & 0 & 1 & 11.40 & 2.75 & 0 & 10 & 11 & 13 & 19 & ▁▂▇▇▁ \\
+G2 & 0 & 1 & 11.57 & 2.91 & 0 & 10 & 11 & 13 & 19 & ▁▁▇▇▂ \\
+G3 & 0 & 1 & 11.91 & 3.23 & 0 & 10 & 12 & 14 & 19 & ▁▁▇▇▂ \\
+\bottomrule()
+\end{longtable}
+
+\hypertarget{ideas-for-visualization}{%
+\subsection{Ideas for visualization}\label{ideas-for-visualization}}
+
+\hypertarget{question-which-variable-corresponds-with-the-least-and-the-greatest-impact-on-a-students-academic-performance.}{%
+\paragraph{Question: Which variable corresponds with the least and the
+greatest impact on a students' academic
+performance.}\label{question-which-variable-corresponds-with-the-least-and-the-greatest-impact-on-a-students-academic-performance.}}
+
+Planned Visualization: To answer this question we will create a
+scatterplot using geom\_point() with the x and y value being alcohol
+consumption and a quantitative variable respectively. We will create a
+plot for each individual quantitative variable using task\_facets() and
+we will add a regression line using lm() which will show us the
+correlation between variables.
+
+\hypertarget{question-does-the-relationship-status-of-a-students-family-have-an-impact-on-their-academic-performance-if-so-how-do-they-relate}{%
+\paragraph{Question: Does the relationship status of a students' family
+have an impact on their academic performance? If so, how do they
+relate?}\label{question-does-the-relationship-status-of-a-students-family-have-an-impact-on-their-academic-performance-if-so-how-do-they-relate}}
+
+Planned Visualization: In order to study the relationship between family
+related attributes of students to their academic performance, we plan on
+creating barplots x will be different attributes related to family where
+y will be academic performance related variables. We will also be using
+lots of functions from dplyr package and facets from glimpse package in
+order to see specific combinations of data since there are many
+variables. PCA or MDS may be used as there are over 30 variables, though
+this questions may require only 5-10 variables.
+
+\hypertarget{question-what-is-the-correlation-between-alcohol-consumption-and-variables-that-impact-academic-performance-such-as-hours-studying-number-of-absences-number-of-class-failures}{%
+\paragraph{Question: What is the correlation between alcohol consumption
+and variables that impact academic performance such as hours studying,
+number of absences, number of class
+failures}\label{question-what-is-the-correlation-between-alcohol-consumption-and-variables-that-impact-academic-performance-such-as-hours-studying-number-of-absences-number-of-class-failures}}
+
+Planned Visualization: To answer this question, we plan on creating a
+barplot using the function barplot() with one of my x,y variables being
+alcohol consumption and the other being a variable related with the
+impact of a students grades such as hours studying. We will use the
+findings from this barplot to figure out what the impact of alcohol is
+on each one. We think a barplot would be useful in this regard because
+it will be easy to read and compare the effect alcohol has on many
+variables in one single graph.
+
+\hypertarget{team-planning}{%
+\subsection{Team planning}\label{team-planning}}
+
+Each member of the group are planning on answering one question each
+with the help from the other two members. Then we will all work together
+on the report and preparing for the oral presentation. The presentation
+will be divide up on all three of us.
+
+All members are planning on using the same dataset; however, all of use
+will be studying different variables in order to answer specific
+questions.
+
+\hypertarget{challenges-anticipated}{%
+\subsection{Challenges anticipated}\label{challenges-anticipated}}
+
+None for now
+
+\hypertarget{references}{%
+\subsection{References}\label{references}}
+
+The dataset comes from Aman Chauhan on:
+\url{https://www.kaggle.com/datasets/whenamancodes/alcohol-effects-on-study?datasetId=2479552}
+(keggle)
+
+\end{document}
