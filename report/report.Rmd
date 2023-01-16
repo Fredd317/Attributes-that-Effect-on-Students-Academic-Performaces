@@ -1,14 +1,9 @@
 ---
 title: "Study of Attributes that Impact Students' Academic Performace"
-author: "Ardavan Shahrabi Farahani, Armaan Gill, Frederick Go"
+author: "Frederick Go, Ardavan Shahrabi Farahani, Armaan Gill"
 date: "2022-12-06"
 output: html_document
 ---
-
-```{r echo=FALSE}
-# Clearing R environment before proceeding. 
-rm(list = ls())
-```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -753,21 +748,3 @@ The family life of a student does have an impact on their grades. For instance, 
 Based on the  visualizations, alcohol consumption does have an effect on study time but it does not have an effect on absences, and study time has impact on academic performances: increased alcohol consumption is associated with studying less. Therefore, we can conclude that alcohol consumption has impact on the grades.
 
 In conclusion, there are many factors when it comes to students' academic performances. They can very based on many different attributes! 
-
-## Team work
-
-Proposal phase: all members met in person to discuss which data set to use for the project. All members have added and edited a Google doc that is shared among all members. This document had information such as what data to use, information of data, possible questions we can choose to answer in this project. 
-
-Analysis phase: Every member had a question assigned to answer. 
-
-- Ardavan: question 1
-- Frederick: question 2
-- Armaan: question 3
-
-Every member has contributed in both presentation preparation, the presentation itself, and the report. Every member has added their corresponding question and the analysis and everyone was assigned one extra part from: introduction, data preparation, and conclusion. 
-
-- Ardavan: introduction
-- Frederick: data preparation
-- Armaan: conclusion
-
-Overall, the amount of works among the members were fair and we all learned a lot from the project. 
