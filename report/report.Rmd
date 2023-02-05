@@ -1,8 +1,13 @@
 ---
 title: "Study of Attributes that Impact Students' Academic Performace"
 author: "Frederick Go, Ardavan Shahrabi Farahani, Armaan Gill"
-date: "2022-12-06"
-output: html_document
+output: 
+  html_document:
+    fig_caption: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    doc_float: yes
 ---
 
 ```{r setup, include=FALSE}

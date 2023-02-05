@@ -1,0 +1,755 @@
+---
+title: "Study of Attributes that Impact Students' Academic Performace"
+author: "Frederick Go, Ardavan Shahrabi Farahani, Armaan Gill"
+output: 
+  html_document:
+    fig_caption: yes
+    theme: cerulean
+    toc: yes
+    toc_depth: 3
+    doc_float: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+
+library(kableExtra)
+library(knitr)
+library(dplyr)
+library(broom)
+library(ggfortify)
+
+library(ggplot2)
+library(GGally)
+
+# Creating a function that will take a table to display as the argument and print the table using the kable and its styling we learned in class. This way, we do not have to repeat typing all styling during the report. 
+display_table <- function(table, title) {
+   kable(table, caption = title) |> kable_styling(full_width = TRUE, bootstrap_options = "striped")
+}
+```
+
+## Introduction
+
+Data set on various variables that could possibly impact on students' academic performance has been chose for this report. 
+
+Here are **3** questions to be answered in this report using the data set chosen. 
+
+1. Which **variable** corresponds with the **least** and the **greatest** impact on a students’ **academic performance**? 
+2. Does the **relationship status** of a students’ **family** have an impact on their **grades**? If so, how do they relate?
+3. What is the correlation between **alcohol consumption** and variables that impact **academic performance** such as hours studying, number of absences, number of class failures?
+
+## Data
+
+The data set chosen comes from Aman Chauhan on: https://www.kaggle.com/datasets/whenamancodes/alcohol-effects-on-study?datasetId=2479552 (keggle). 
+
+It is called "Alcohol Effects On Study", but it also has many other variables describing students. 
+
+The **data set** describes performance of students in **Mathematics class** and **Portuguese class** with a variety of **attributes** of students from two Portuguese schools. These attributes include their gender, status of parents, alcohol consumption, their activities etc. We have chose to use maths data set only as mathematics is studied globally where Portuguese is not. 
+
+```{r echo=FALSE}
+# Maths = read.csv(here("data", "Maths.csv"))
+maths_study = read.csv(here("data", "Maths.csv"))
+```
+
+```{r echo=FALSE}
+display_table(head(maths_study[1:8]), "Table 1. First 6 Rows of Data Set")
+```
+```{r echo=FALSE}
+display_table(head(maths_study[9:16]), "")
+```
+```{r echo=FALSE}
+display_table(head(maths_study[17:24]), "")
+```
+```{r echo=FALSE}
+display_table(head(maths_study[25:33]), "")
+```
+
+
+```{r echo=FALSE}
+data_description_table <- rbind(
+  c("school",     "categorical",  "Students’ school: [GP, MS]"),
+  c("sex",        "categorical",  "Students’ sex: [F, M]"),
+  c("age",        "quantitative", "Students’ age: [15-22]"),
+  c("address",    "categorical",  "Students’ home address type: [U, R]"),
+  c("famsize",    "categorical",  "Students’ family size: [LE3, GT3]"),
+  c("Pstatus",    "categorical",  "Parents’ cohabitation status: [T, A]"),
+  c("Medu",       "categorical",  "Mother’s education: [0:4]"),
+  c("Fedu",       "categorical",  "Father’s education: [0:4]"),
+  c("Mjob",       "categorical",  "Mother’s job"),
+  c("Fjob",       "categorical",  "Father’s job"),
+  c("reason",     "categorical",  "Why students chose the school"),
+  c("guardian",   "categorical",  "Students’ guardian"),
+  c("traveltime", "categorical",  "Travel time from home to school: [1:4]"),
+  c("studytime",  "categorical",  "Weekly study time: [1:4]"),
+  c("failures",   "categorical",  "Number of past class failures: [0:4]"),
+  c("schoolsup",  "categorical",  "Extra educational support: [yes, no]"),
+  c("famsup",     "categorical",  "Family educational support: [yes, no]"),
+  c("paid",       "categorical",  "Extra paid classes: [yes, no]"),
+  c("activities", "categorical",  "Extracurricular activities: [yes, no]"),
+  c("nursery",    "categorical",  "Attended nursery school: [yes, no]"),
+  c("higher",     "categorical",  "Interested in higher education: [yes, no]"),
+  c("internet",   "categorical",  "Availability of internet at home: [yes, no]"),
+  c("romantic",   "categorical",  "In a romantic relationship: [yes, no]"),
+  c("famrel",     "categorical",  "Family relationship quality: [1:5]"),
+  c("freetime",   "categorical",  "Free time after school: [1:5]"),
+  c("goout",      "categorical",  "Goes out with friends: [1:5]"),
+  c("Dalc",       "categorical",  "Alcohol consumption on workdays: [1:5]"),
+  c("Walc",       "categorical",  "Alcohol consumption on weekends: [1:5]"),
+  c("health",     "categorical",  "Student’s health: [1:5]"),
+  c("absences",   "quantitative", "Number of school absences: 0~93"),
+  c("G1",         "quantitative", "First period grade: 0~20"),
+  c("G2",         "quantitative", "Second period grade: 0~20"),
+  c("G3",         "quantitative", "Final grade: 0~20"))
+
+colnames(data_description_table) <- c("Variable Name", "Type", "Description & Sample Space")
+```
+
+```{r echo=FALSE}
+display_table(data_description_table, "Table 2. Attribites Types and Descriptions")
+```
+
+There are 30 variables and 3 targets (G1, G2, G3). According to the author of the data:
+
+- G1: Students' grade of the first term
+- G2: Students' grade of the second term
+- G3: Students' overall academic performance
+
+```{r fig.show = "hide", echo=FALSE}
+G1_dist = hist(maths_study$G1)
+G2_dist = hist(maths_study$G2)
+G3_dist = hist(maths_study$G3)
+```
+
+```{r echo=FALSE}
+plot(G1_dist, xlab = "G1", ylab = "Count", main = "Figure 0.1 Distribution of G1")
+plot(G2_dist, xlab = "G2", ylab = "Count", main = "Figure 0.2 Distribution of G2")
+plot(G3_dist, xlab = "G3", ylab = "Count", main = "Figure 0.3 Distribution of G3")
+```
+
+From the histogram, other than the outliers where the grades are 0s, the grades are **normally** distributed. 
+
+```{r echo=FALSE}
+table = rbind(c("G3"),
+      c(mean(maths_study$G3)),
+      c(min(maths_study$G3)),
+      c(quantile(maths_study$G3, prob=c(.25))),
+      c(median(maths_study$G3)),
+      c(quantile(maths_study$G3, prob=c(.75))),
+      c(max(maths_study$G3)))
+
+colnames(table) <- c("Values")
+rownames(table) <- c("Variable Name", "Mean", "Minimum Value", "Q1", "Median Value", "Q3", "Maximum Value")
+```
+
+Here are some other statistics on G3. 
+
+```{r echo=FALSE}
+display_table(table, "Table 3. Summary of G3")
+```
+
+"Table 4. Summary of Data Set"
+```{r echo=FALSE}
+skimr::skim(maths_study)
+```
+
+
+
+The data set has no missing data. No outlier exists since all data is categorical. Carnalities seem even, no irregular carnality noticed. 
+
+Therefore, analysis was made with the data with no pre process of data. 
+
+## Exploratory analysis
+
+### Question 1
+
+Question we are trying to answer: which **variable** corresponds with the **least** and the **greatest** impact on a students’ **academic performance**? 
+
+```{r echo=FALSE}
+maths_study |>
+  select(G1, G2, G3) |>
+  ggpairs() + labs(title = "Figure 1.1. Correlation Between G1, G2, and G3")
+```
+
+#### Correlations
+
+In this graph, correlations between grades are high as the author of the data set stated. Therefore, we will not be using all three target variables (G1, G2, and G3), we will be only using G3 which is the overall grade for analytic purposes. 
+
+In order to look at all variables, attributes are separated into 4 domains: 
+
+- Family related: famsize, Pstatus, Medu, Fedu, Mjob, Fjob, guardian, famrel, and famsup
+- Entertainment related: Dalc, Walc, freetime, romantic, goout, and traveltime
+- Academic related: studytime, activities, schoolsup, absences, failures, nursery, and higher
+- Other attributes related to students: sex, age, address, paid, internet, and health
+
+```{r echo=FALSE}
+domain_family = c("famsize", "Pstatus", "Medu", "Fedu", "Mjob", "Fjob", "guardian", "famrel", "famsup")
+domain_entertainment = c("Dalc", "Walc", "freetime", "romantic", "goout", "traveltime")
+domain_academia = c("studytime", "activities", "schoolsup", "absences", "failures", "nursery", "higher")
+domain_student = c("sex", "age", "address", "paid", "internet", "health")
+```
+
+This shows correlations of G3 with family related variables. 
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+maths_study |>
+  select(all_of(domain_family), G3) |>
+  ggpairs() + labs(title = "Figure 1.2. Correlations Between Family Variables and G3")
+```
+
+This show correlations of G3 and entertainment related variables. 
+
+```{r message=FALSE, echo=FALSE}
+maths_study |>
+  select(all_of(domain_entertainment), G3) |>
+  ggpairs() + labs(title = "Figure 1.3. Correlations Between Entertainment Related Variables and G3")
+```
+
+This show correlations of G3 and Academic related variables such as higher/failures.
+
+```{r message=FALSE, echo=FALSE}
+maths_study |>
+  select(all_of(domain_academia), G3) |>
+  ggpairs() + labs(title = "Figure 1.4. Correlations Between Academia Related Variables and G3")
+```
+
+This shows correlations of G3 and other attributes students such as age. 
+
+```{r message=FALSE, echo=FALSE}
+maths_study |>
+  select(all_of(domain_student), G3) |>
+  ggpairs() + labs(title = "Figure 1.5. Correlations Between Student Related Variables and G3")
+```
+
+```{r echo=FALSE}
+maths_study_numeric = data.matrix(data.frame(unclass(maths_study))) 
+maths_study_numeric = data.frame(maths_study_numeric)
+```
+
+```{r echo=FALSE}
+display_table(head(maths_study_numeric[1:8]), "Table 5. First 6 Rows of Data with Converted to Numeric Values")
+```
+```{r echo=FALSE}
+display_table(head(maths_study_numeric[9:16]), "")
+```
+```{r echo=FALSE}
+display_table(head(maths_study_numeric[17:24]), "")
+```
+```{r echo=FALSE}
+display_table(head(maths_study_numeric[25:33]), "")
+```
+
+```{r message=FALSE, echo=FALSE}
+maths_study_numeric |>
+  select(all_of(domain_family), G3) |>
+  ggpairs() + labs(title = "Figure 1.6. Correlation Between Domain Family Variables and G3 (All Numeric)")
+```
+
+This shows correlations of G3 with family related variables such as mother/father education etc. G3 has the highest correlation with the level of mothers' education
+
+```{r message=FALSE, echo=FALSE}
+maths_study_numeric |>
+  select(all_of(domain_entertainment), G3) |>
+  ggpairs() + labs(title = "Figure 1.7. Correlation Between Entertainment Related Variables and G3 (All Numeric)")
+```
+
+This show correlations of G3 and entertainment related variables such as goout/Travel time etc. G3 has the highest correlation with the amount of time going out.
+
+```{r message=FALSE, echo=FALSE}
+maths_study_numeric |>
+  select(all_of(domain_academia), G3) |>
+  ggpairs() + labs(title = "Figure 1.8. Correlation Between Academia Related Variables and G3 (All Numeric)")
+```
+
+This show correlations of G3 and Academic related variables such as higher/failures. G3 has the highest correlation with the failures variable. 
+
+```{r message=FALSE, echo=FALSE}
+maths_study_numeric |>
+  select(all_of(domain_student), G3) |>
+  ggpairs() + labs(title = "Figure 1.9. Correlation Between Student Related Variables and G3 (All Numeric)")
+```
+
+This shows correlations of G3 and other attributes students such as age. Here G3 has the highest correlation with a student's age variable.
+
+#### Dimentionality Reduction
+
+The data set contains lots of variables; hence, we have analyzed them with PCA. 
+
+```{r echo=FALSE}
+pc_maths = prcomp(maths_study_numeric %>% select(-G3))
+```
+
+```{r echo=FALSE}
+pc_maths_frame = data.matrix(pc_maths)
+pc_maths_frame_back = data.frame(pc_maths_frame[2])
+```
+
+```{r echo=FALSE}
+display_table(pc_maths_frame_back[1:5], "Table 6. PCA Resulting PCs (First 5)")
+```
+
+And one interesting information we found was the number of absences had a significant negative impact on G3 in PC1. 
+
+From the analysis, because attributes absences had small correlation in ggpair, but big impact in PCA, it can be stated that absences alone does not tell us a lot about the student and their grades; however, when there are more and more other attributes available, absences variable can tell us a lot more about the student and their grades. 
+
+However, note that when the data set was being converted into numeric values, some variables do not have any relation to the numbers they are assigned to. For instance, attribute Mjob has value "at_home" and it is assigned to value 1 and other values to other numbers. There is no specific order to these; hence, tools like PCA may work poorly or possibly inaccurate at all. 
+
+```{r message=FALSE, echo=FALSE, warning=FALSE}
+maths_study |>
+  ggplot(aes(absences)) +
+  geom_histogram(size = 1.0) +
+  labs(title = "Figure 1.10. Bar Chart of Number of Students and Number of Absences", x = "Absences", y = "Count") 
+```
+
+### Question 2
+
+Second question we are trying to answer: 
+
+- Does the relationship status of a students’ family have an impact on their grades? If so, how do they relate?
+
+First, variables impacting on the support from family availability is looked at. 
+
+#### Data Filtering
+
+Only the variables related to family attributes are selected. 
+
+```{r, echo=FALSE}
+fam_data = maths_study |>
+  select("famsize", "Pstatus", "Medu", "Fedu", "Mjob", 
+         "Fjob", "famsup", "famrel", "guardian", "age", "G3")
+```
+
+First 6 rows of the selected table: 
+
+```{r, echo=FALSE}
+display_table(head(fam_data), "Table 7. First 6 Rows of Selected Variables")
+```
+
+#### Plots
+
+Scatter plots of some of variables are generated; however, all variables but age and G3 are categorical, scatter plots are meaningless. 
+
+```{r fig.height=6, fig.width=9, echo=FALSE}
+fam_medu_famrel = fam_data |>
+  ggplot(aes(x = Medu, y = famrel)) +
+  geom_point() + 
+  labs(title = "Figure 2.1 Education Level of Mothers of Students vs their Family Relationship",
+       x = "Education Level of Mother",
+       y = "Family Relationship")
+
+fam_medu_famrel
+```
+
+```{r fig.height=6, fig.width=9, echo=FALSE}
+fam_fedu_famrel = fam_data |>
+  ggplot(aes(x = Fedu, y = famrel)) +
+  geom_point() + 
+  labs(title = "Figure 2.2 Education Level of Fathers of Students vs their Family Relationship",
+       x = "Education Level of Father",
+       y = "Family Relationship")
+
+fam_fedu_famrel
+```
+
+So, as you can study from the data, almost all variables in the data set we have
+is categorical with 5 or less different values; hence, it is almost meaningless 
+to make scatter plots. 
+
+Now, because of the reason stated above, other methods will be required. 
+
+First approach was to just observe the variables and see how they relate to each other. 
+
+```{r, echo=FALSE}
+fam_data_occupation = fam_data |>
+  select(famsup, Mjob, Fjob, Pstatus) |>
+  pivot_longer(cols = `Mjob`:`Fjob`, 
+               names_to = "Mother/Father", 
+               values_to = "Occupation")
+
+fam_data_occupation$`Mother/Father` = as.factor(fam_data_occupation$`Mother/Father`)
+
+display_table(head(fam_data_occupation), "Table 8. First 6 Rows of Pivoted Table for Occupation")
+```
+
+```{r fig.height=6, fig.width=12, echo=FALSE}
+fam_famsup_occ_bar = fam_data_occupation|>
+  ggplot(aes(x = Occupation, fill = famsup)) +
+  geom_bar(position = position_dodge2(preserve = "single")) +
+  facet_wrap(~fam_data_occupation$"Mother/Father") + 
+  labs(fill = "Family Support Availability",
+       x = "Occupation of Parent",
+       y = "Count",
+       title = "Figure 2.3 Number of Family Support Availablity for Each Occupation") +
+  theme(aspect.ratio = 1) + 
+  theme_dark()
+
+fam_famsup_occ_bar
+```
+
+From the visualization, occupation other dominates. Generally, no matter the occupation of the parents, there are more supportive parents than those who are not supportive. 
+
+Hence, now PStatus variable is taken into account which tells us whether the parents live with the student together or apart. 
+
+```{r fig.height=12, fig.width=12, echo=FALSE}
+fam_famsup_occ_bar_facet = fam_data_occupation|>
+  ggplot(aes(x = Occupation, fill = famsup)) +
+  geom_bar(position = position_dodge2(preserve = "single")) +
+  facet_wrap(~fam_data_occupation$"Mother/Father" + fam_data_occupation$Pstatus) + 
+  labs(fill = "Family Support Availability",
+       x = "Occupation of Parent",
+       y = "Count",
+       title = "Figure 2.4 Number of Family Support Availablity for Each Occupation") +
+  theme(aspect.ratio = 1) + 
+  theme_dark()
+
+fam_famsup_occ_bar_facet
+```
+
+But because there are a lot more supportive parents, it is hard to observe the ratio of not supportive parents, so they are now separated. 
+
+```{r, echo=FALSE}
+fam_data_occupation_A = fam_data_occupation |>
+  filter(fam_data_occupation$Pstatus == "A") 
+
+fam_data_occupation_T = fam_data_occupation |>
+  filter(fam_data_occupation$Pstatus == "T") 
+```
+
+```{r fig.height=6, fig.width=12, echo=FALSE}
+fam_famsup_together = fam_data_occupation_T |>
+  ggplot(aes(x = Occupation, fill = famsup)) +
+  geom_bar(position = position_dodge2(preserve = "single")) +
+  facet_wrap(~fam_data_occupation_T$"Mother/Father") + 
+  labs(fill = "Family Support Availability",
+       x = "Occupation of Parent",
+       y = "Count",
+       title = "Figure 2.5 Number of Family Support Availablity for Each Occupation where Parents live Together") +
+  theme(aspect.ratio = 1) + 
+  theme_dark()
+
+fam_famsup_together
+```
+
+```{r fig.height=6, fig.width=12, echo=FALSE}
+fam_famsup_apart = fam_data_occupation_A|>
+  ggplot(aes(x = Occupation, fill = famsup)) +
+  geom_bar(position = position_dodge2(preserve = "single")) +
+  facet_wrap(~fam_data_occupation_A$"Mother/Father") + 
+  labs(fill = "Family Support Availability",
+       x = "Occupation of Parent",
+       y = "Count",
+       title = "Figure 2.6 Number of Family Support Availablity for Each Occupation where Parents live Apart") +
+  theme(aspect.ratio = 1) + 
+  theme_dark()
+
+fam_famsup_apart
+```
+
+Second approach was PCA as there are so many variables. 
+
+Because PCA can take numeric values only, all categorized or character values must be switched to numeric values. 
+
+```{r echo=FALSE}
+fam_data_numeric = data.matrix(data.frame(unclass(fam_data))) 
+fam_data_numeric = data.frame(fam_data_numeric)
+```
+
+```{r echo=FALSE}
+pc_fam = prcomp(fam_data_numeric %>% select(-G3))
+```
+
+```{r echo=FALSE}
+display_table(pc_fam["rotation"], "Table 9. PCA Resulting PCs for Family Related Attributes")
+```
+
+From the table, PC1 has huge impacts by Medu, Fedu, and Mjob. 
+
+```{r echo=FALSE}
+autoplot_PC_fam = autoplot(pc_fam, data=fam_data_numeric , loadings=TRUE, loadings.label=TRUE, scale=1, variance_percentage = TRUE)  + 
+  labs(title = "Figure 2.7 PC 1 to PC 2 on Family Related Variables")
+
+autoplot_PC_fam
+```
+
+This is interesting because the the plots are telling us that the occupation of mothers matter a lot more than the occupation of fathers. If we refer back the figure x, there are many mothers staying home support children fully. We expect this is one of the reasons. 
+
+## Linear Model
+
+Now, linear models will be used to see the trends of G3 over age. 
+
+```{r echo=FALSE}
+general_age_G3 = maths_study |>
+  ggplot(aes(x = age, y = G3)) +
+  geom_point() + 
+  labs(title = "Figure 2.8 Age of Students vs Their Overall Grades",
+       x = "Age of Student",
+       y = "Overall Grade of Student")
+
+general_age_G3
+```
+
+From this visualization, notice how the mean grade of students is extremely high. This is because there are only 3 students those are 20 years old. For ages 21 and 22, there are only one student each. Hence, we will ignore the 5 instances by filter only the instances with age less than 20. 
+
+```{r echo=FALSE}
+general_age_meanG3 = maths_study |>
+  group_by(age) |>
+  mutate(meanGrade = mean(G3)) |>
+  ggplot(aes(x = age, y = meanGrade)) +
+  geom_point() + 
+  labs(title = "Figure 2.9 Age of Students vs Mean Overall Grade of Each Age Group",
+       x = "Age Group of Student",
+       y = "Mean Overall Grade")
+
+general_age_meanG3
+```
+
+```{r echo=FALSE}
+general_age_meanG3_20 = maths_study |>
+  filter(age < 20) |>
+  group_by(age) |>
+  mutate(meanGrade = mean(G3)) |>
+  ggplot(aes(x = age, y = meanGrade)) +
+  geom_point() + 
+  labs(title = "Figure 2.10 Age of Students (<20) vs Mean Overall Grade of Each Age Group",
+       x = "Age Group of Student",
+       y = "Mean Overall Grade")
+
+general_age_meanG3_20
+```
+
+```{r echo=FALSE}
+general_age_medG3_20 = maths_study |>
+  filter(age < 20) |>
+  group_by(age) |>
+  mutate(medianGrade = median(G3)) |>
+  ggplot(aes(x = age, y = medianGrade)) +
+  geom_point() + 
+  labs(title = "Figure 2.11 Age of Students (<20) vs Median Overall Grade of Each Age Group",
+       x = "Age Group of Student",
+       y = "Median Overall Grade")
+
+general_age_medG3_20
+```
+
+Both mean and median grades of students show some decrease over age. 
+
+```{r echo=FALSE}
+fam_lm_age_G3 = maths_study |>
+  ggplot(aes(x = age, y = G3)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y~x) + 
+  labs(title = "Figure 2.12 Linear Relationship of Age vs Overall Grade",
+       x = "Age",
+       y = "Overall Grade")
+
+fam_lm_age_G3
+```
+
+```{r echo=FALSE}
+fam_lm_age_G3_20 = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y~x) + 
+  labs(title = "Figure 2.13 Linear Relationship of Age (<20) vs Overall Grade",
+       x = "Age",
+       y = "Overall Grade")
+
+fam_lm_age_G3_20
+```
+
+Therefore, a general simple linear fit also shows a decrease in trend. 
+
+```{r echo=FALSE}
+fam_lm_age_G3_20_quantile = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3)) +
+  geom_point() + 
+  geom_quantile(method = "rqss", formula = y ~ x,
+                lambda = 1, quantiles = c(0.25, 0.5, 0.75)) + 
+  labs(title = "Figure 2.14 25%, 50%, 75% Quantile of Age (<20) vs Overall Grade",
+       x = "Age",
+       y = "Overall Grade")
+
+fam_lm_age_G3_20_quantile
+```
+
+25%, 50%, and 75% percent quantiles all show decrease in trend. 
+
+```{r echo=FALSE}
+fam_lm_famsup_age_G3 = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3, color = famsup)) +
+  geom_point() + 
+  geom_smooth(method = "lm", formula = y ~ x) + 
+  labs(title = "Figure 2.15 Linear Model of Age (<20) vs Overall Grade of 
+       Students Based on Family Support Availability",
+       x = "Age",
+       y = "Overall Grade",
+       color = "Availibility of Family Support")
+
+fam_lm_famsup_age_G3
+```
+
+```{r echo=FALSE}
+fam_lm_famsup_age_G3_quantile = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3, color = famsup)) +
+  geom_point() + 
+  geom_quantile(method = "rqss", formula = y ~ x,
+                lambda = 1, quantiles = c(0.25, 0.5, 0.75)) + 
+  labs(title = "Figure 2.16 Age of Students (<20) vs Overall Grade of 
+       Students Based on Family Support Availability with Quantiles",
+       x = "Age",
+       y = "Overall Grade",
+       color = "Availibility of Family Support")
+
+fam_lm_famsup_age_G3_quantile
+```
+Figures x and y show that grades of students with no family support available more steep decrease in grades over grade. Also figure y tells us that students with family support around the lower 25% tend to do better over age; however, those without the support keep decreasing in grades. 
+
+Earlier, we noticed that the occupation of mothers matter significantly more than the occupation of fathers. Hence, color is set to mothers' occupation to see why that is the case. 
+
+```{r echo=FALSE}
+fam_lm_mjob_age_G3 = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3, color = Mjob)) +
+  geom_point() + geom_smooth(method = "lm", formula = y ~ x, alpha = 0.1) + 
+  labs(title = "Figure 2.17 Age of Students (<20) vs Overall Grade of 
+       Students Based on Occupation of Mothers",
+       x = "Age",
+       y = "Overall Grade",
+       color = "Occupation of Mother")
+
+fam_lm_mjob_age_G3
+```
+
+```{r echo=FALSE}
+fam_lm_mjob_age_G3_quantile = maths_study |>
+  filter(age < 20) |>
+  ggplot(aes(x = age, y = G3, color = Mjob)) +
+  geom_point() + 
+  geom_quantile(method = "rqss", formula = y ~ x,
+                lambda = 1, quantiles = c(0.25, 0.5, 0.75)) + 
+  labs(title = "Figure 2.18 Age of Students (<20) vs Overall Grade of 
+       Students Based on Occupation of Mothers with Quantiles",
+       x = "Age",
+       y = "Overall Grade",
+       color = "Occupation of Mother")
+
+fam_lm_mjob_age_G3_quantile
+```
+
+From both figures x and y, we can observe that students with mothers staying home are getting better grades over time. This is expected as mothers staying home will be able to spend more time on their children and care more. 
+
+### Question 3
+
+Last question we are trying to answer: What is the correlation between **alcohol consumption** and variables that impact **academic performance** such as hours studying, number of absences, number of class failures?
+
+```{r echo=FALSE, message=FALSE}
+Weekday_Absences <- maths_study |>
+  ggplot(aes(x=absences, color = Dalc)) +
+  geom_histogram(linewidth = 1.0) +
+  facet_wrap( ~ Dalc) + ggtitle("Figure 3.1 Faceted Histogram Between Absences and Weekday Alcohol") +
+  labs(x = "Number of Absences",
+       y = "Count")
+Weekday_Absences
+
+Weekday_Study <- maths_study |>
+  ggplot(aes(x=studytime, color = Dalc)) +
+  geom_histogram(linewidth = 1.0) +
+  facet_wrap( ~ Dalc)+ ggtitle("Figure 3.2 Faceted Histogram Between Study Time and Weekday Alcohol") +
+  labs(x = "Study Time ( Hours per week)",
+       y = "Count")
+Weekday_Study
+
+Weekend_Absences <- maths_study |>
+  ggplot(aes(x=absences, color = Walc)) +
+  geom_histogram(linewidth = 1.0) +
+  facet_wrap( ~ Walc)+ ggtitle("Figure 3.3 Faceted Histogram Between Absences and Weekend Alcohol") +
+  labs(x = "Number of Absences",
+       y = "Count")
+Weekend_Absences
+
+Weekend_Study <- maths_study |>
+  ggplot(aes(x=studytime, color = Walc)) +
+  geom_histogram(linewidth = 1.0) +
+  facet_wrap( ~ Walc)+ ggtitle("Figure 3.4 Faceted Histogram Between Study Time and Weekend Alcohol") +
+  labs(x = "Study Time ( Hours per week)",
+       y = "Count")
+Weekend_Study
+```
+
+```{r echo=FALSE}
+Weekday_Study <- maths_study |>
+  ggplot(aes(x=Dalc, fill = 'red')) +
+  geom_histogram(binwidth = 1.0, fill = 'red') +
+  facet_wrap( ~ studytime)+ labs(title = "Figure 3.5 Effect of Weekday Alcohol Consumption On Study Time", 
+                                 x = "Week Days Alcohol (Higher Meaning More Alcohol Consumption",
+                                 y = "Count") + 
+  theme_dark()
+Weekday_Study
+
+Weekend_Study <- maths_study |>
+  ggplot(aes(x=Walc)) +
+  geom_histogram(binwidth = 1.0, fill = 'red') +
+  facet_wrap( ~ studytime)+ labs(title = "Figure 3.6 Effect of Weekend Alcohol Consumption On Study Time", 
+                                 x = "Weekend Alcohol (Higher Meaning More Alcohol Consumption",
+                                 y = "Count") + 
+  theme_dark()
+Weekend_Study
+
+ Weekday_Absences <- maths_study |>
+  ggplot(aes(x=absences)) +
+  geom_histogram(binwidth = 1.0, fill = 'red') +
+  facet_wrap( ~ Dalc)+ labs(title = "Figure 3.7 Effect of Weekday Alcohol Consumption On Absences", 
+                                 x = "Number of Absences",
+                                 y = "Count") + 
+   theme_dark()
+Weekday_Absences
+
+Weekend_Absences <- maths_study |>
+  ggplot(aes(x=absences)) +
+  geom_histogram(binwidth = 1.0, fill = "red") +
+  facet_wrap( ~ Walc)+ labs(title = "Figure 3.8 Effect of Weekend Alcohol Consumption On Absences", 
+                                 x = "Number of Absences",
+                                 y = "Count") + 
+  theme_dark()
+Weekend_Absences
+```
+
+## Final visualizations
+
+Here are the significant data visualizations generated in order to answer question 2. 
+
+```{r echo=FALSE}
+autoplot_PC_fam
+```
+
+```{r echo=FALSE}
+fam_lm_famsup_age_G3
+```
+
+```{r echo=FALSE}
+fam_lm_mjob_age_G3
+```
+
+Here are the significant data visualizations generated in order to answer question 3. 
+
+```{r echo=FALSE}
+Weekday_Study
+Weekend_Study
+Weekday_Absences
+Weekend_Absences
+```
+
+## Interpretation and conclusion
+
+Student absences have the greatest negative impact on their grades and there is no single variable relating to overtly positive effects on grades. Note that absences tell us more about the students as more attributes are available. 
+
+The family life of a student does have an impact on their grades. For instance, support availability from parents had impact on the grades. Hence, we can conclude that family related attributes effect students' academic performances. 
+
+Based on the  visualizations, alcohol consumption does have an effect on study time but it does not have an effect on absences, and study time has impact on academic performances: increased alcohol consumption is associated with studying less. Therefore, we can conclude that alcohol consumption has impact on the grades.
+
+In conclusion, there are many factors when it comes to students' academic performances. They can very based on many different attributes! 
